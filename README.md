@@ -1,14 +1,9 @@
 # Unfollower Tracker
 
-Tracks who unfollows you on **X (Twitter)**, and/or your **Instagram**
+Tracks who unfollows you on X (Twitter) and/or your Instagram
 follower count over time. Choose either platform, or both, per run.
 
 ## Important: X vs. Instagram are not equivalent
-
-| Platform  | What you get                                      | Why |
-|-----------|----------------------------------------------------|-----|
-| **X**       | A real list of **who** unfollowed you (username + ID) | X's API exposes an actual follower list |
-| **Instagram** | Only your follower **count** and how it changed run-to-run | Meta's official Graph API does **not** expose individual follower usernames — only aggregate metrics |
 
 Getting actual Instagram follower *usernames* would require unofficial
 private-API libraries (e.g. `instagrapi`) or browser automation, both of
@@ -50,9 +45,8 @@ reported as changed until the second run.
 
 ### 1. Install dependencies
 
-```bash
+bash
 pip install -r requirements.txt
-```
 
 ### 2. X API credentials (skip if you only want Instagram)
 
@@ -82,7 +76,7 @@ pip install -r requirements.txt
 
 ### 5. Environment variables
 
-```bash
+bash
 # X (Twitter) — omit if not tracking X
 export X_BEARER_TOKEN="your-bearer-token"
 export X_USER_ID="your-numeric-user-id"      # or use X_USERNAME instead
@@ -100,80 +94,24 @@ export GOOGLE_SHEET_ID="your-spreadsheet-id"
 
 # Optional: where local snapshot files are stored (defaults to cwd)
 # export SNAPSHOT_DIR="/path/to/data"
-```
-
-You only need to set credentials for the platform(s) you actually use —
-the tool skips a platform gracefully (with a clear message) if its
-credentials aren't set, rather than crashing.
 
 ## Usage
 
-```bash
+bash
 python -m unfollower_tracker --platform x            # X only
 python -m unfollower_tracker --platform instagram     # Instagram only
 python -m unfollower_tracker --platform both          # both (default)
 python -m unfollower_tracker                          # same as --platform both
-```
 
-Run it again later (next day, next week, whatever cadence) to see changes
-show up.
-
-### Automating it
-
-**Cron (Linux/macOS)**, e.g. daily at 9am:
-
-```cron
-0 9 * * * cd /path/to/unfollower_tracker && /usr/bin/python3 -m unfollower_tracker --platform both >> tracker.log 2>&1
-```
-
-**Windows Task Scheduler**: create a daily task running
-`python -m unfollower_tracker --platform both` from the project directory.
-
-## Project structure
-
-```
-unfollower_tracker/
-├── unfollower_tracker/
-│   ├── __init__.py
-│   ├── __main__.py          # enables `python -m unfollower_tracker`
-│   ├── main.py               # CLI entry point / argument parsing
-│   ├── config.py              # env var loading + validation
-│   ├── snapshot.py            # shared JSON snapshot save/load
-│   ├── sheets_export.py       # shared Google Sheets export
-│   └── providers/
-│       ├── __init__.py
-│       ├── x_provider.py         # X follower list + diff
-│       └── instagram_provider.py # Instagram follower count + diff
-├── requirements.txt
-└── README.md
-```
-
-## Files generated at runtime (not committed)
-
-| File                          | Purpose                                        |
-|--------------------------------|-------------------------------------------------|
-| `x_snapshot.json`              | Last known X follower list                     |
-| `instagram_snapshot.json`      | Last known Instagram follower count             |
-| `service_account.json`         | Your Google service account key                |
-
-## .gitignore
-
-```
-*_snapshot.json
-service_account.json
-*.log
-__pycache__/
-*.pyc
-```
+Run it again later (next day, next week, whatever cadence) to see changes show up.
 
 ## Notes & limitations
 
 - X API rate limits apply for large follower counts; `wait_on_rate_limit=True`
   handles this automatically but large accounts may take a while.
-- Both platforms only detect changes **between runs** — someone who follows
+- Both platforms only detect changes between runs — someone who follows
   and unfollows between two runs won't be caught.
-- Instagram results are **counts only, never usernames** — see the table
-  at the top of this README for why.
+- Instagram results are currently exporting counts only.
 
 ## License
 
