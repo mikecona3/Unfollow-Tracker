@@ -3,8 +3,7 @@
 Easily track who unfollows you on and log everything to a Google Sheet/Excel.
 
 Every run snapshots your current follower list, diffs it against the previous
-snapshot, and appends any newly-detected unfollowers to a Google Sheet with
-a timestamp.
+snapshot, and appends any newly-detected unfollowers to a Google Sheet
 
 *NOTE: The first run only establishes a baseline - there's nothing to compare
 against yet so no unfollowers will be reported. This is not an error, it is 
